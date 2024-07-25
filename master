@@ -1,0 +1,49 @@
+local hitbox = 20
+
+local function expandHitbox(child)
+    if child:FindFirstChild("HumanoidRootPart") then
+        child.HumanoidRootPart.Size = Vector3.new(hitbox, hitbox, hitbox)
+        child.HumanoidRootPart.Transparency = 0.4
+        child.HumanoidRootPart.CanCollide = false
+    else
+        --print('No HumanoidRootPart found for:', child.Name)
+    end
+end
+
+local function resetHitbox(child)
+    if child:FindFirstChild("HumanoidRootPart") then
+        child.HumanoidRootPart.Size = Vector3.new(1, 1, 1)
+        child.HumanoidRootPart.Transparency = 0.1
+    end
+end
+
+local function onToggleHitbox(Value)
+    getgenv().gyat = Value
+
+    if getgenv().gyat then
+        for _, child in ipairs(game.Workspace.Players:GetChildren()) do
+            if child ~= game.Players.LocalPlayer.Character then
+                expandHitbox(child)
+            end
+        end
+
+        while getgenv().gyat do
+            wait(2)
+            if not getgenv().gyat then break end
+            for _, child in pairs(game.Workspace.Players:GetChildren()) do
+                if child ~= game.Players.LocalPlayer.Character then
+                    expandHitbox(child)
+                end
+            end
+        end
+    else
+        for _, child in ipairs(game.Workspace.Players:GetChildren()) do
+            if child ~= game.Players.LocalPlayer.Character then
+                resetHitbox(child)
+            end
+        end
+    end
+end
+
+-- Example usage:
+onToggleHitbox(true)  -- Enable hitbox expansion
